@@ -13,4 +13,19 @@
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="LargeJsonFormatted.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="LargeJsonInline.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SmallJsonFormatted.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SmallJsonInline.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
