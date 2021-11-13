@@ -138,6 +138,136 @@ namespace JsonBenchmark
             var str = Encoding.UTF8.GetString(a);
         }
 
+        #region SpanJson
+        [Benchmark, BenchmarkCategory("Deserialize")]
+        [ArgumentsSource(nameof(GetJson))]
+        public void SpanJsonGenericUtf8Deserialize(string json)
+        {
+            var input = Encoding.UTF8.GetBytes(json);
+            var a = SpanJson.JsonSerializer.Generic.Utf8.Deserialize<List<Friend>>(input);
+        }
+
+        [Benchmark, BenchmarkCategory("Deserialize")]
+        [ArgumentsSource(nameof(GetJson))]
+        public void SpanJsonGenericUtf16Deserialize(string json)
+        {
+            var a = SpanJson.JsonSerializer.Generic.Utf16.Deserialize<List<Friend>>(json);
+        }
+
+        [Benchmark, BenchmarkCategory("Deserialize")]
+        [ArgumentsSource(nameof(GetJson))]
+        public void SpanJsonNonGenericUtf8DeserializeAnon(string json)
+        {
+            var input = Encoding.UTF8.GetBytes(json);
+            var a = SpanJson.JsonSerializer.NonGeneric.Utf8.Deserialize(input, typeof(List<Friend>));
+        }
+
+        [Benchmark, BenchmarkCategory("Deserialize")]
+        [ArgumentsSource(nameof(GetJson))]
+        public void SpanJsonNonGenericUtf16DeserializeAnon(string json)
+        {
+            var a = SpanJson.JsonSerializer.NonGeneric.Utf16.Deserialize(json, typeof(List<Friend>));
+        }
+
+        [Benchmark, BenchmarkCategory("DeserializeAsync")]
+        [ArgumentsSource(nameof(GetJson))]
+        public async Task SpanJsonGenericUtf8DeserializeAsync(string json)
+        {
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var a = await SpanJson.JsonSerializer.Generic.Utf8.DeserializeAsync<List<Friend>>(stream);
+        }
+
+        [Benchmark, BenchmarkCategory("DeserializeAsync")]
+        [ArgumentsSource(nameof(GetJson))]
+        public async Task SpanJsonGenericUtf16DeserializeAsync(string json)
+        {
+            using var stream = new StringReader(json);
+            var a = await SpanJson.JsonSerializer.Generic.Utf16.DeserializeAsync<List<Friend>>(stream);
+        }
+
+        [Benchmark, BenchmarkCategory("DeserializeAsync")]
+        [ArgumentsSource(nameof(GetJson))]
+        public async Task SpanJsonNonGenericUtf8DeserializeAnonAsync(string json)
+        {
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var a = await SpanJson.JsonSerializer.NonGeneric.Utf8.DeserializeAsync(stream, typeof(List<Friend>));
+        }
+
+        [Benchmark, BenchmarkCategory("DeserializeAsync")]
+        [ArgumentsSource(nameof(GetJson))]
+        public async Task SpanJsonNonGenericUtf16DeserializeAnonAsync(string json)
+        {
+            using var stream = new StringReader(json);
+            var a = await SpanJson.JsonSerializer.NonGeneric.Utf16.DeserializeAsync(stream, typeof(List<Friend>));
+        }
+
+        [Benchmark, BenchmarkCategory("Serialize")]
+        [ArgumentsSource(nameof(GetList))]
+        public void SpanJsonGenericUtf8Serialize(List<Friend> friends)
+        {
+            var input = SpanJson.JsonSerializer.Generic.Utf8.Serialize(friends);
+            var a = Encoding.UTF8.GetString(input);
+        }
+
+        [Benchmark, BenchmarkCategory("Serialize")]
+        [ArgumentsSource(nameof(GetList))]
+        public void SpanJsonGenericUtf16Serialize(List<Friend> friends)
+        {
+            var input = SpanJson.JsonSerializer.Generic.Utf16.Serialize(friends);
+        }
+
+        [Benchmark, BenchmarkCategory("Serialize")]
+        [ArgumentsSource(nameof(GetList))]
+        public void SpanJsonNonGenericUtf8Serialize(List<Friend> friends)
+        {
+            var input = SpanJson.JsonSerializer.NonGeneric.Utf8.Serialize(friends);
+            var a = Encoding.UTF8.GetString(input);
+        }
+
+        [Benchmark, BenchmarkCategory("Serialize")]
+        [ArgumentsSource(nameof(GetList))]
+        public void SpanJsonNonGenericUtf16Serialize(List<Friend> friends)
+        {
+            var input = SpanJson.JsonSerializer.NonGeneric.Utf16.Serialize(friends);
+        }
+
+        [Benchmark, BenchmarkCategory("SerializeAsync")]
+        [ArgumentsSource(nameof(GetList))]
+        public async Task SpanJsonGenericUtf8SerializeAsync(List<Friend> friends)
+        {
+            using var stream = new MemoryStream(8192);
+            await SpanJson.JsonSerializer.Generic.Utf8.SerializeAsync(friends, stream);
+            var a = Encoding.UTF8.GetString(stream.ToArray(), 0, (int)stream.Length);
+        }
+
+        [Benchmark, BenchmarkCategory("SerializeAsync")]
+        [ArgumentsSource(nameof(GetList))]
+        public async Task SpanJsonGenericUtf16SerializeAsync(List<Friend> friends)
+        {
+            using var writer = new StringWriter();
+            await SpanJson.JsonSerializer.Generic.Utf16.SerializeAsync(friends, writer);
+            var a = writer.ToString();
+        }
+
+        [Benchmark, BenchmarkCategory("SerializeAsync")]
+        [ArgumentsSource(nameof(GetList))]
+        public async Task SpanJsonNonGenericUtf8SerializeAsync(List<Friend> friends)
+        {
+            using var stream = new MemoryStream(8192);
+            await SpanJson.JsonSerializer.NonGeneric.Utf8.SerializeAsync(friends, stream);
+            var a = Encoding.UTF8.GetString(stream.ToArray(), 0, (int)stream.Length);
+        }
+
+        [Benchmark, BenchmarkCategory("SerializeAsync")]
+        [ArgumentsSource(nameof(GetList))]
+        public async Task SpanJsonNonGenericUtf16SerializeAsync(List<Friend> friends)
+        {
+            using var writer = new StringWriter();
+            await SpanJson.JsonSerializer.NonGeneric.Utf16.SerializeAsync(friends, writer);
+            var a = writer.ToString();
+        }
+        #endregion
+
         public IEnumerable<string> GetJson()
         {
             yield return SmallJsonInline;
